@@ -8,16 +8,31 @@ public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
 
-    public float speed = 12f;
-    public float gravity = -9.18f;
-    public float jumpHeight = 8;
+    [SerializeField] private float
+        maxWalkSpeed,
+        acceleration,
+        gravity,
+        jumpHeight;
 
-    public Transform groundCheck;
-    public LayerMask groundMask;
-    public float groundDistance = 0.4f;
+    public float currentSpeed;
 
-    Vector3 velocity;
-    bool isGrounded;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float groundDistance;
+
+    [SerializeField] private Vector3 velocity;
+    [SerializeField] private bool isGrounded;
+
+    private void UpdateSpeed(Vector2 input)
+    {
+        if (input.magnitude > 0)
+        {
+            if (input.magnitude > 1) input.Normalize();
+            currentSpeed = Mathf.Lerp(currentSpeed, maxWalkSpeed, 0.01f);
+        }
+        else 
+            currentSpeed = Mathf.Lerp(currentSpeed, 0, 0.001f);
+    }
 
     void Update()
     {
@@ -26,15 +41,18 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-        Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        UpdateSpeed(input);
 
         Vector3 moveDirection = transform.forward * input.y + transform.right * input.x;
-        controller.Move(moveDirection * speed * Time.deltaTime);
+        Vector3 walkVelocity = moveDirection * currentSpeed * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
+        {
             velocity.y = Mathf.Sqrt(jumpHeight * 2f * -gravity);
+        }
 
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        controller.Move(walkVelocity + velocity * Time.deltaTime);
     }
 }
