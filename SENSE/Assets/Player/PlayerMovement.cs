@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,39 +21,48 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float groundDistance;
 
-    [SerializeField] private Vector3 velocity;
+    [SerializeField] private Vector3 worldVelocity;
     [SerializeField] private bool isGrounded;
+
+    private Vector3 moveDirection = Vector3.zero;
+    [SerializeField] private float snappiness;
 
     private void UpdateSpeed(Vector2 input)
     {
         if (input.magnitude > 0)
         {
-            if (input.magnitude > 1) input.Normalize();
-            currentSpeed = Mathf.Lerp(currentSpeed, maxWalkSpeed, 0.01f);
+            currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.deltaTime, maxWalkSpeed);
         }
         else 
-            currentSpeed = Mathf.Lerp(currentSpeed, 0, 0.001f);
+            currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
+    }
+
+    private Vector3 inputDirection;
+    private void UpdateDirection(Vector2 input)
+    {
+        inputDirection = transform.forward * input.y + transform.right * input.x;
+        moveDirection = Vector3.Lerp(moveDirection, (input.magnitude > 0) ? inputDirection : Vector3.zero, snappiness);
     }
 
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && velocity.y < 0)
-            velocity.y = -2f;
+        if (isGrounded && worldVelocity.y < 0)
+            worldVelocity.y = -2f;
 
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         UpdateSpeed(input);
+        UpdateDirection(input);
 
-        Vector3 moveDirection = transform.forward * input.y + transform.right * input.x;
-        Vector3 walkVelocity = moveDirection * currentSpeed * Time.deltaTime;
+        Vector3 inputVelocity = moveDirection.normalized * currentSpeed * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * 2f * -gravity);
+            worldVelocity.y = Mathf.Sqrt(jumpHeight * 2f * -gravity);
         }
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(walkVelocity + velocity * Time.deltaTime);
+        worldVelocity.y += gravity * Time.deltaTime;
+        controller.Move(inputVelocity + worldVelocity * Time.deltaTime);
     }
 }
