@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] private Transform
         subject,                // the transform to follow positionally
-        characterOrientation;   // the transform to rotate with the camera
+        character;   // the transform to rotate with the camera
 
     private float
         xRotation,
@@ -61,8 +61,9 @@ public class CameraController : MonoBehaviour
         // clamp x rotation to prevent looking too far up/down
         xRotation = Mathf.Clamp(desiredX, -90f, 90f);
 
-        // rotate both the camera and the character
+        // rotate the camera
         transform.localRotation = Quaternion.Euler(xRotation, desiredY, 0f);
-        characterOrientation.localRotation = Quaternion.Euler(0, desiredX, 0);
+        // rotate the character
+        character.localRotation = Quaternion.Euler(0, desiredY, 0);
     }
 }
