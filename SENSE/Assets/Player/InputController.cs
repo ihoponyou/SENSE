@@ -14,11 +14,17 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Ray interactRay = new Ray(playerCamera.position, playerCamera.forward);
-        Debug.DrawRay(interactRay.origin, interactRay.direction);
-        if (Physics.Raycast(interactRay, out RaycastHit hit))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log(hit.transform.name);
+            Ray interactRay = new Ray(playerCamera.position, playerCamera.forward);
+            Debug.DrawRay(interactRay.origin, interactRay.direction);
+            if (Physics.Raycast(interactRay, out RaycastHit hit))
+            {
+                var interactable = hit.transform.GetComponent<IInteracatable>();
+                interactable.Interact();
+
+                Debug.Log(hit.transform.name);
+            }
         }
     }
 }

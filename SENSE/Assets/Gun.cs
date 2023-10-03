@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour, Interacatible
+public class Gun : MonoBehaviour, IInteracatable
 {
     void Start()
     {
