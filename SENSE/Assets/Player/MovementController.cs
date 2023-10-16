@@ -29,7 +29,6 @@ public class MovementController : MonoBehaviour
     [SerializeField] private float
         slideForce = 400,
         slideResistance = 0.2f;
-    private KeyCode crouchButton = KeyCode.LeftControl;
 
     // jump
     [SerializeField] private bool
@@ -113,6 +112,7 @@ public class MovementController : MonoBehaviour
         input.y = Input.GetAxisRaw("Vertical");
 
         jumping = Input.GetButton("Jump");
+        crouching = Input.GetButton("Crouch");
     }
 
     private void DoGravity()

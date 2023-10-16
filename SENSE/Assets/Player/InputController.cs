@@ -5,13 +5,12 @@ using UnityEngine;
 public class InputController : MonoBehaviour
 {
     [SerializeField] Transform playerCamera;
-    // Start is called before the first frame update
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -21,7 +20,7 @@ public class InputController : MonoBehaviour
             if (Physics.Raycast(interactRay, out RaycastHit hit))
             {
                 var interactable = hit.transform.GetComponent<IInteracatable>();
-                interactable.Interact();
+                interactable.Interact(transform);
 
                 Debug.Log(hit.transform.name);
             }
