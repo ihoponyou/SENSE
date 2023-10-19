@@ -511,6 +511,12 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!20 &1454747108 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 899988672325605638, guid: bfafbbf016749c941bd93d9dc749713f,
+    type: 3}
+  m_PrefabInstance: {fileID: 483323451}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1930009531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -569,6 +575,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6439895540604511547, guid: 3845694e1c96d184b8b7e03c45eef087,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1454747108}
     - target: {fileID: 7393484156244516198, guid: 3845694e1c96d184b8b7e03c45eef087,
         type: 3}
       propertyPath: m_Name

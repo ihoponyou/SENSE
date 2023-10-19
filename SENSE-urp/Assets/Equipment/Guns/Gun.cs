@@ -5,13 +5,16 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour, IInteracatable
 {
+    private Collider gunCollider;
+    
     private bool equipped = false;
 
     [SerializeField] private Camera cam;
 
-    void Start()
-    {
 
+    void Awake()
+    {
+        gunCollider = transform.GetComponent<Collider>();
     }
 
     void Update()
@@ -31,12 +34,13 @@ public class Gun : MonoBehaviour, IInteracatable
     {
         Debug.Log(interactor.name + " interacted");
 
-        transform.parent = interactor;
+        transform.parent = Camera.main.transform.GetChild(0);
 
         // move gun to character
         transform.localPosition = new Vector3(.5f, 0, 1);
         transform.localEulerAngles = Vector3.zero;
 
         equipped = true;
+        gunCollider.enabled = false;
     }
 }
